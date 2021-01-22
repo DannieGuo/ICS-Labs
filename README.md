@@ -1,2 +1,2 @@
 # ICS_Lab
-Labs of ICS cousrse
+Labs of ICS course (CSAPP)
