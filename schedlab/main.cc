@@ -1,10 +1,10 @@
 #include "policy.h"
-#include<map>
-#include<iostream>
+#include <map>
+#include <iostream>
 using namespace std;
 
-map<int,Event::Task> TaskQueue; 
-map<int,Event::Task> TaskIO;
+map<int, Event::Task> TaskQueue; 
+map<int, Event::Task> TaskIO;
 
 int now_time = -1; 
 
