@@ -25,84 +25,79 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 	if(N==32)
 	{
 		int a[8];
-        for(int i = 0; i < N; i += 8)
-         for(int j = 0; j < M; j += 8)
-         {
-                for(int i1 = 0; i1 < 8; i1++)
-                {
-                	for(int j1 = 0; j1 < 8; j1++)
-                		a[j1]=A[i+i1][j+j1];
-					
-					for(int j1 = 0; j1 < 8; j1++)
-						B[j+j1][i+i1]=a[j1];
-						
-				}
-        }	
-	}
-	else
-	if(N==67)
-	{
-		int a[8];
-        for(int i = 0; i < N; i += 8)
-         for(int j = 0; j < M; j += 8)
-         {
-                for(int i1 = 0; i1 < 8 && i1+i<N; i1++)
-                {
-                	for(int j1 = 0; j1 < 8 && j1+j < M; j1++)
-                		a[j1]=A[i+i1][j+j1];
-					
-					for(int j1 = 0; j1 < 8 && j1+j < M; j1++)
-						B[j+j1][i+i1]=a[j1];
-						
-				}
-                 
-        }	
-	}
-	else
-	if(N==64)
-	{
-		int a[8];
-        for(int i = 0; i < N; i += 8)
-         for(int j = 0; j < M; j += 8)
-         {
-                for(int i1 = 0; i1 < 4 && i1+i < N; i1++)
-                {//left top 4*4
-                	for(int j1 = 0; j1 < 8 && j1+j < M; j1++)
-                		a[j1]=A[i+i1][j+j1];
-                		
-					for(int j1 = 0; j1 < 4 && j1+j < M; j1++)
-					{
-						B[j+j1][i+i1]=a[j1];
-						B[j+j1][i+i1+4]=a[j1+4];
-					}
-				}
-				
-				//right top and left bottom
-				for(int j1 = 0; j1 < 4; j1++)
-				{
-					for(int i1 = 4; i1 < 8; i1++)
-						a[i1-4]=B[j1+j][i1+i];
+		for(int i = 0; i < N; i += 8)
+		 for(int j = 0; j < M; j += 8)
+		 {
+			for(int i1 = 0; i1 < 8; i1++)
+			{
+				for(int j1 = 0; j1 < 8; j1++)
+					a[j1] = A[i + i1][j + j1];
 
-					for(int i1 = 4; i1 < 8; i1++)
-						a[i1]=A[i1+i][j1+j];
-					
-					for(int i1 = 4; i1 < 8; i1++)
-						B[j1+j][i1+i]=a[i1];
-					
-					for(int i1 =0; i1 < 4; i1++)
-						B[j+j1+4][i+i1]=a[i1];
-				}
-					
-				//right bottom
-				for(int i1 = 4; i1 < 8; i1++)
+				for(int j1 = 0; j1 < 8; j1++)
+					B[j + j1][i + i1] = a[j1];
+			}
+		}	
+	}
+	else if(N==67)
+	{
+		int a[8];
+		for(int i = 0; i < N; i += 8)
+		 for(int j = 0; j < M; j += 8)
+		 {
+			for(int i1 = 0; i1 < 8 && i1 + i < N; i1++)
+			{
+				for(int j1 = 0; j1 < 8 && j1+j < M; j1++)
+					a[j1] = A[i + i1][j + j1];
+
+				for(int j1 = 0; j1 < 8 && j1 + j < M; j1++)
+					B[j + j1][i + i1] = a[j1];
+			}
+		}	
+	}
+	else if(N==64)
+	{
+		int a[8];
+		for(int i = 0; i < N; i += 8)
+		 for(int j = 0; j < M; j += 8)
+		 {
+			for(int i1 = 0; i1 < 4 && i1 + i < N; i1++)
+			{//left top 4*4
+				for(int j1 = 0; j1 < 8 && j1 + j < M; j1++)
+					a[j1] = A[i + i1][j + j1];
+
+				for(int j1 = 0; j1 < 4 && j1 + j < M; j1++)
 				{
-					for(int j1 = 4; j1 < 8; j1++)
-						a[j1-4]=A[i1+i][j1+j];
-					
-					for(int j1 = 4; j1 < 8; j1++)
-						B[j1+j][i1+i]=a[j1-4];
+					B[j + j1][i + i1] = a[j1];
+					B[j + j1][i + i1 + 4] = a[j1 + 4];
 				}
-        }
+			}
+
+			//right top and left bottom
+			for(int j1 = 0; j1 < 4; j1++)
+			{
+				for(int i1 = 4; i1 < 8; i1++)
+					a[i1 - 4] = B[j1 + j][i1 + i];
+
+				for(int i1 = 4; i1 < 8; i1++)
+					a[i1] = A[i1 + i][j1 + j];
+
+				for(int i1 = 4; i1 < 8; i1++)
+					B[j1 + j][i1 + i] = a[i1];
+
+				for(int i1 = 0; i1 < 4; i1++)
+					B[j + j1 + 4][i + i1] = a[i1];
+			}
+
+			//right bottom
+			for(int i1 = 4; i1 < 8; i1++)
+			{
+				for(int j1 = 4; j1 < 8; j1++)
+					a[j1 - 4] = A[i1 + i][j1 + j];
+
+				for(int j1 = 4; j1 < 8; j1++)
+					B[j1 + j][i1 + i] = a[j1 - 4];
+			}
+		}
 	}
 }
 
